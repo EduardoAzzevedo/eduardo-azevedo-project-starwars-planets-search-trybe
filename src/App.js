@@ -1,9 +1,14 @@
 import React from 'react';
-import './App.css';
+import Search from './componet/Search';
+import Table from './componet/Table';
+import StarWarsProvider from './context/starWarsProvider';
 
 function App() {
   return (
-    <span>Star Wars</span>
+    <StarWarsProvider>
+      <Search />
+      <Table />
+    </StarWarsProvider>
   );
 }
 
