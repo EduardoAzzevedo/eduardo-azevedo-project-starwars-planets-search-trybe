@@ -20,46 +20,33 @@ function Table() {
             <th>Terrain</th>
             <th>Surface Water</th>
             <th>Population</th>
-            <th>Filmes</th>
+            <th>Films</th>
             <th>Created</th>
             <th>Edited</th>
             <th>URL</th>
           </tr>
+
         </thead>
         <tbody>
-          {filtredPlanets ? (
-            filtredPlanets.map(({
-              name,
-              rotation_period: rotataionPeriod,
-              orbital_period: orbitalPeriod,
-              diameter,
-              climate,
-              gravity,
-              terrain,
-              surface_water: surfaceWater,
-              population,
-              films,
-              created,
-              edited,
-              url,
-            }) => (
-              <tr key={ name }>
-                <td data-testid="planet-name">{ name }</td>
-                <td>{ rotataionPeriod }</td>
-                <td>{ orbitalPeriod }</td>
-                <td>{ diameter }</td>
-                <td>{ climate }</td>
-                <td>{ gravity }</td>
-                <td>{ terrain }</td>
-                <td>{ surfaceWater }</td>
-                <td>{ population }</td>
-                <td>{ films }</td>
-                <td>{ created }</td>
-                <td>{ edited }</td>
-                <td>{ url }</td>
+          {
+            filtredPlanets.map((planet) => (
+              <tr key={ planet.name }>
+                <td data-testid="planet-name">{ planet.name }</td>
+                <td>{ planet.rotation_period }</td>
+                <td>{ planet.orbital_period }</td>
+                <td>{ planet.diameter }</td>
+                <td>{ planet.climate }</td>
+                <td>{ planet.gravity }</td>
+                <td>{ planet.terrain }</td>
+                <td>{ planet.surface_water }</td>
+                <td>{ planet.population }</td>
+                <td>{ planet.films.map((film) => film) }</td>
+                <td>{ planet.created }</td>
+                <td>{ planet.edited }</td>
+                <td>{ planet.url }</td>
               </tr>
-            )))
-            : (<p>Carregando...</p>)}
+            ))
+          }
         </tbody>
       </table>
     </div>

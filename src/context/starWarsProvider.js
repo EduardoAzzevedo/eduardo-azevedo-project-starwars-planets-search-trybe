@@ -19,7 +19,7 @@ function StarWarsProvider({ children }) {
   }, [starWarsPlanetsAPI]);
 
   useEffect(() => {
-    const filtredPlanet = planets.filter(({ name }) => name.toLoweCase()
+    const filtredPlanet = planets.filter(({ name }) => name.toLowerCase()
       .includes(filtredPlanetsList.filterByName.name));
     setFiltredPlanets(filtredPlanet);
   }, [filtredPlanetsList]);
