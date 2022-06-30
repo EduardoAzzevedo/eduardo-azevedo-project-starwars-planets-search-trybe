@@ -12,6 +12,18 @@ function StarWarsProvider({ children }) {
       name: '',
     },
   });
+  const [columnFilter, setColumnFilter] = useState('population');
+  const [comparisonFilter, setComparisonFilter] = useState('maior que');
+  const [value, setValue] = useState(0);
+  const [numericFilter, setNumericFilter] = useState({
+    filterByNumericValues: [
+      {
+        column: '',
+        comparison: '',
+        value: 0,
+      },
+    ],
+  });
 
   useEffect(() => {
     setPlanets(starWarsPlanetsAPI);
@@ -22,11 +34,34 @@ function StarWarsProvider({ children }) {
     const filtredPlanet = planets.filter(({ name }) => name.toLowerCase()
       .includes(filtredPlanetsList.filterByName.name));
     setFiltredPlanets(filtredPlanet);
-  }, [filtredPlanetsList]);
+    // Mentoria Luá;
+    const filtredValue = numericFilter.filterByNumericValues
+      .reduce((acc, filter) => acc.filter((planet) => {
+        switch (filter.comparisonFilter) {
+        case 'maior que':
+          return planet[filter.column] > Number(filter.value);
+        case 'menor que':
+          return planet[filter.column] < Number(filter.value);
+        case 'igual a':
+          return planet[filter.column] === filter.value;
+        default:
+          return true;
+        }
+      }), filtredPlanet);
+    setFiltredPlanets(filtredValue);
+  }, [filtredPlanetsList, numericFilter]);
 
   const context = {
     filtredPlanets,
     setFiltredPlanetsList,
+    columnFilter,
+    setColumnFilter,
+    comparisonFilter,
+    setComparisonFilter,
+    value,
+    setValue,
+    numericFilter,
+    setNumericFilter,
   };
 
   return (
