@@ -1,18 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import StarWarsContext from '../context/starWarsContext';
 
 function Search() {
   const {
     setFiltredPlanetsList,
-    columnFilter,
-    setColumnFilter,
-    comparisonFilter,
-    setComparisonFilter,
-    value,
-    setValue,
     numericFilter,
     setNumericFilter,
   } = useContext(StarWarsContext);
+  const columnArray = [
+    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
+  ];
+  const [columns, setColumns] = useState(columnArray);
+  const [columnFilter, setColumnFilter] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [value, setValue] = useState(0);
 
   const onHandleFilter = ({ target }) => {
     setFiltredPlanetsList({ filterByName: { name: target.value.toLowerCase() } });
@@ -21,16 +22,36 @@ function Search() {
   const onHandleNumbFilter = () => {
     const clickSelectFilter = {
       column: columnFilter,
-      comparisonFilter,
+      comparison,
       value,
     };
     setNumericFilter({
       filterByNumericValues: [...numericFilter.filterByNumericValues, clickSelectFilter],
     });
+    const removeColumnFilter = columns.filter((column) => column !== columnFilter);
+    setColumns(removeColumnFilter);
   };
-  const columnArray = [
-    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
-  ];
+
+  const onHandleSelectDeleteFilter = (selectedFilter) => {
+    const selectToDelete = numericFilter.filterByNumericValues
+      .filter((_filter, index) => index !== selectedFilter);
+    setNumericFilter({ filterByNumericValues: selectToDelete });
+    const filtersArray = selectToDelete.map((filter) => filter.column);
+    const newArrayColumn = columnArray.filter((column) => !filtersArray.includes(column));
+    setColumns(newArrayColumn);
+  };
+
+  const onHandleDeleteAllFilter = () => {
+    const filterBase = {
+      filterByNumericValues: [{
+        column: '',
+        comparison: '',
+        value: 0,
+      }],
+    };
+    setNumericFilter(filterBase);
+    setColumns(columnArray);
+  };
 
   return (
     <div>
@@ -44,11 +65,11 @@ function Search() {
         data-testid="column-filter"
         onChange={ ({ target }) => setColumnFilter(target.value) }
       >
-        {columnArray.map((column) => <option key={ column }>{ column }</option>)}
+        {columns.map((column) => <option key={ column }>{ column }</option>)}
       </select>
       <select
         data-testid="comparison-filter"
-        onChange={ ({ target }) => setComparisonFilter(target.value) }
+        onChange={ ({ target }) => setComparison(target.value) }
       >
         <option>maior que</option>
         <option>menor que</option>
@@ -67,10 +88,28 @@ function Search() {
       >
         Filter
       </button>
+      <button
+        type="button"
+        onClick={ onHandleDeleteAllFilter }
+        data-testid="button-remove-filters"
+      >
+        Remover todas filtragens
+      </button>
       {numericFilter.filterByNumericValues.map((filter, ind) => (
-        <p key={ `${filter.column} ${ind}` }>
-          {`${filter.column} ${filter.comparisonFilter} ${filter.value}`}
-        </p>
+        <div
+          key={ `${filter.column} ${ind}` }
+          data-testid="filter"
+        >
+          <p>
+            {`${filter.column} ${filter.comparison} ${filter.value}`}
+            <button
+              type="button"
+              onClick={ () => onHandleSelectDeleteFilter(ind) }
+            >
+              Deleta
+            </button>
+          </p>
+        </div>
       ))}
     </div>
   );
