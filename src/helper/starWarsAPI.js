@@ -1,17 +1,13 @@
-import { useEffect, useState } from 'react';
+const urlApi = 'https://swapi-trybe.herokuapp.com/api/planets/';
 
-function StarWarsAPI() {
-  const [data, setData] = useState('');
+const starWarsFetch = async () => {
+  try {
+    const response = await fetch(urlApi);
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-  useEffect(() => {
-    const responseAPI = async () => {
-      fetch('https://swapi-trybe.herokuapp.com/api/planets/')
-        .then((response) => response.json())
-        .then((planetDataAPI) => setData(planetDataAPI.results));
-    };
-    responseAPI();
-  }, []);
-  return data;
-}
-
-export default StarWarsAPI;
+export default starWarsFetch;
